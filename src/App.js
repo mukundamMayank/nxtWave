@@ -1,25 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
-// import User from './User.js';
-// import BasicExample from './Card.js'
 import {Card} from 'react-bootstrap'
 import Button from 'react-bootstrap/Button';
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import AddUser from './User.js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 
 var user_obj=[];
 
-// var resource_obj=[
-
-//   ];
 var request_obj=[];
 
 function App() {
 
-  const [view, setView]=useState("Request")
+
+  const [view, setView]=useState(false)
   const jsonData = useRef(null);
+  const [search, setSearch]  = useState(false);
+  let filterdCards;
+  console.log("rendering")
   
   function setUser(){
     setView("User");
@@ -33,30 +32,37 @@ function App() {
     setView("Request");
   }
 
-  console.log("hello world")
-  async function fetchJsonData(){
-    const response = await fetch('https://media-content.ccbp.in/website/react-assignment/resources.json');
-    const resoucrces = await response.json();
-    return resoucrces;
+  function getFilteredData(searchText){
+    console.log("search key is ", searchText, jsonData.current);
+      var temp = [];
+      let details = jsonData.current;
+    if(details!=null){
+      console.log("details length ", details.length);
+    for(let i = 0;i<details.length;i++){
+      temp.push(details[i]);
+      // if(details[i]['tag'] == )
+    }
+    
   }
-  fetchJsonData().then(resouceList => {
-  // for(let i = 0;i<resouceList.length;i++){
-  //   console.log(resouceList[i]['tag'])
-  // }
-    // var jsonDataString = JSON.stringify(resouceList);
-    // var jsonData = JSON.parse(jsonDataString);
-    // console.log("json data is ", typeof(jsonData));
-    jsonData.current = resouceList;
-    console.log("json data is ", jsonData);
-  for(let i  = 0;i<resouceList.length;i++){
+    console.log("temp is", temp);
+    
+
+     filterdCards=temp.filter(
+      resource=>{
+        // console.log("###### ", resource['title'])
+        return(resource['title'].toLowerCase().includes(searchText.toLowerCase()));
+      }
+    );
+     let resouceList = filterdCards;
+     user_obj=[];
+     request_obj=[];
+     for(let i  = 0;i<resouceList.length;i++){
     if(resouceList[i]['tag']=="user"){
-      // let obj = Object.push(user_obj, {title:resouceList[i]['title']});
       let obj = {title:resouceList[i]['title'], 
                  subtitle:resouceList[i]['link'], 
                  text:resouceList[i]['description'],
                  image:resouceList[i]['icon_url']};
       user_obj.push(obj);
-      // console.log(user_obj);
     }
     else if(resouceList[i]['tag']=="request"){
       let obj = {title:resouceList[i]['title'], 
@@ -64,25 +70,73 @@ function App() {
                  text:resouceList[i]['description'],
                  image:resouceList[i]['icon_url']};
       request_obj.push(obj);
-      // console.log(obj);
+    }
+    
+  }
+     
 
+  }
+
+  useEffect(()=>{
+    console.log("inside use effect");
+    return ()=>{
+      
+      
+      // console.log("json current is ", jsonData.current, " ", search);
+      const fetchJsonData = fetch('https://media-content.ccbp.in/website/react-assignment/resources.json');
+      fetchJsonData.then(response=>{
+        return response.json();
+      }).then(resouceList => {
+    jsonData.current = resouceList;
+    console.log("json data is ", jsonData);
+    user_obj = [];
+    request_obj = [];
+  for(let i  = 0;i<resouceList.length;i++){
+    if(resouceList[i]['tag']=="user"){
+      let obj = {title:resouceList[i]['title'], 
+                 subtitle:resouceList[i]['link'], 
+                 text:resouceList[i]['description'],
+                 image:resouceList[i]['icon_url']};
+      user_obj.push(obj);
+    }
+    else if(resouceList[i]['tag']=="request"){
+      let obj = {title:resouceList[i]['title'], 
+                 subtitle:resouceList[i]['link'], 
+                 text:resouceList[i]['description'],
+                 image:resouceList[i]['icon_url']};
+      request_obj.push(obj);
     }
     
   }
   
 });
+      console.log("user obj is ", user_obj, "request obj is ", request_obj);
+      // setView("Resource");
+      setSearch(true);
+    }
+
+
+  })
+
+  // console.log("hello world")
+  //  function fetchJsonData(){
+  //   const response =  fetch('https://media-content.ccbp.in/website/react-assignment/resources.json');
+  //   const resoucrces =  response.json();
+  //   return resoucrces;
+  // }
+    
   return (
 
     <div className="App">
-       <Search details={jsonData.current}/>
         <div>
+           {search && <Search getFilteredData={getFilteredData}/>}
           <Button variant="primary" className="request_button" onClick={setRequest}>Request</Button>
           <Button variant="primary" className="resource_button" onClick={setResource}>Resource</Button>
           <Button variant="primary" onClick={setUser}>User</Button>
         </div>
-        {view=="User" && <User/>}
-        {view=="Resource" && <Resource/>}
-        {view=="Request" && <Request/>}
+        {view=="User" && <User userList={user_obj}/>}
+        {view==="Resource" &&  user_obj.length>0 && request_obj.length>0 && <Resource userList={user_obj} requestList={request_obj}/>}
+        {view=="Request" && <Request requestList={request_obj}/>}
 
         <BrowserRouter>
           <Routes>
@@ -110,65 +164,71 @@ const renderCard = (card)=>{
     )
   }
 
-function User(){
+function User(props){
   // console.log(user_obj)
-
   
-
   return(
     <div className="test">
-      {user_obj.map(renderCard)}
+      {props.userList.map(renderCard)}
     </div>
   );
 }
 
-function Resource(){
+function Resource(props){
+  console.log("props is ", props );
+  const user_obj1=props.userList;
+  const request_obj1= props.requestList;
   return(
   <div>
-    {user_obj.map(renderCard)}
-    {request_obj.map(renderCard)}
+    {user_obj1 && user_obj1.map(renderCard)}
+    {request_obj1 &&request_obj1.map(renderCard)}
     </div>
   );
 }
 
-function Request(){
+function Request(props){
   return(
   <div>
-    {request_obj.map(renderCard)}
+    {props.requestList.map(renderCard)}
     </div>
   );
 }
 
-function Search(details){
-  console.log("deatil ss", details);
-  const [searchText, setSearchText]=useState('mar');
-    var temp = [];
-    if(details.length>0){
-    for(let i = 0;i<details.details.length;i++){
-      temp.push(details.details[i]);
-    }
-  }
-    console.log("temp is", temp);
+function Search(props){
+  
+  // let details = props.details;
+  // // console.log("deatil ss", details.details);
+  const [searchText, setSearchText]=useState('');
+  //   var temp = [];
+  //   if(details && details.details){
+  //     console.log("details length ", details.details.length);
+  //   for(let i = 0;i<details.details.length;i++){
+  //     temp.push(details.details[i]);
+  //   }
+    
+  // }
+  //   console.log("temp is", temp);
     
 
-    const filterdCards=temp.filter(
-      resource=>{
-        // console.log("###### ", resource['title'])
-        return(resource['title'].toLowerCase().includes(searchText.toLowerCase()));
-      }
-    );
+  //   const filterdCards=temp.filter(
+  //     resource=>{
+  //       // console.log("###### ", resource['title'])
+  //       return(resource['title'].toLowerCase().includes(searchText.toLowerCase()));
+  //     }
+  //   );
   
   function searchList() {
-    return (
-        <SearchList filterdCards={filterdCards} />
+    // return (
+    //     <SearchList filterdCards={filterdCards} />
       
-    );
+    // );
+    props.getFilteredData(searchText);
   }
 
   const handleClick= e=>{
     
     setSearchText(e.target.value);
-    console.log("serac  text is ", searchText, temp.length);
+    console.log("serac  text is ", searchText);
   }
 
   return(
@@ -183,6 +243,7 @@ function Search(details){
 function SearchList({ filterdCards }) {
   console.log('filterdCards ', filterdCards)
   const filtered = filterdCards.map(card =>  {
+    console.log("card titile is ", card.title);
     <Card style={{ width: '18rem', border: `2px solid black`}}>
     <Card.Body>
       <Card.Title>card.title</Card.Title>
