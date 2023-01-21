@@ -1,10 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
+import React from 'react';
 import {Card} from 'react-bootstrap'
 import Button from 'react-bootstrap/Button';
 import {useState, useRef, useEffect} from 'react'
 import AddUser from './User.js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Pagination from './Pagination.js';
 
 
 var user_obj=[];
@@ -14,14 +16,24 @@ var request_obj=[];
 function App() {
 
 
-  const [view, setView]=useState(false)
+  const [view, setView]=useState("Resource")
   const jsonData = useRef(null);
   const [search, setSearch]  = useState(false);
+
+  const [posts, setPosts] = useState([]);
+  const [postsPerPage] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);
+
   let filterdCards;
   console.log("rendering")
+
+  let allSessionsCount = user_obj.length+request_obj.length;
+  // const [sessionsPerPage, setSessionsPerPage] = useState(6);
+  // const [currentPage, setCurrentPage] = useState(1);
   
   function setUser(){
     setView("User");
+
   }
 
   function setResource(){
@@ -108,6 +120,11 @@ function App() {
     }
     
   }
+  if(view == "User")setPosts(user_obj);
+  else if(view=="Request")setPosts(request_obj);
+  else {
+    setPosts(user_obj+request_obj);
+  }
   
 });
       console.log("user obj is ", user_obj, "request obj is ", request_obj);
@@ -118,17 +135,16 @@ function App() {
 
   })
 
-  // console.log("hello world")
-  //  function fetchJsonData(){
-  //   const response =  fetch('https://media-content.ccbp.in/website/react-assignment/resources.json');
-  //   const resoucrces =  response.json();
-  //   return resoucrces;
-  // }
-    
+   const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
   return (
 
     <div className="App">
         <div>
+            
            {search && <Search getFilteredData={getFilteredData}/>}
           <Button variant="primary" className="request_button" onClick={setRequest}>Request</Button>
           <Button variant="primary" className="resource_button" onClick={setResource}>Resource</Button>
@@ -137,7 +153,12 @@ function App() {
         {view=="User" && <User userList={user_obj}/>}
         {view==="Resource" &&  user_obj.length>0 && request_obj.length>0 && <Resource userList={user_obj} requestList={request_obj}/>}
         {view=="Request" && <Request requestList={request_obj}/>}
-
+          
+        <Pagination
+        postsPerPage={postsPerPage}
+        totalPosts={posts.length}
+        paginate={paginate}
+      />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Resource/>}/>
