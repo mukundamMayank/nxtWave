@@ -5,6 +5,8 @@ import AddNewData from "./UseForm";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css'
+import { useNavigate} from "react-router-dom";
+import App from "./App.js"
 
 const FORM_ENDPOINT = "https://media-content.ccbp.in/website/react-assignment/add_resource.json"
 
@@ -20,6 +22,7 @@ function isValidHttpUrl(string) {
 
 function AddUser() {
     let flag = 0;
+    const navigate = useNavigate();
 
 	const formElement = useRef(null);
 
@@ -36,6 +39,12 @@ function AddUser() {
 	const [isValidLink, setIsValidLink] = useState(false);
 	const [isValidIconUrl, setIsValidIconUrl] = useState(false);
 	const [isValidDescription, setIsValidDescription] = useState(false);
+
+	const [back, setBack] = useState(false);
+
+	function gotoMain(){
+		setBack(true);
+	}
 
 	
 
@@ -66,7 +75,8 @@ function AddUser() {
 	// const {handleSubstatus, message}=AddNewData({form: formElement.current});
 
   return (
-  	<div>
+  	<div class="addItemPage">
+  	<Button variant="primary" className="gotoMainButton" onClick={()=>navigate(-1)}>Go to Main</Button>
   	<form className='form-group'>
             <label className='m-2 form-label'>Title </label>
             <br/>

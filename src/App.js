@@ -5,6 +5,7 @@ import {Card} from 'react-bootstrap'
 import Button from 'react-bootstrap/Button';
 import {useState, useRef, useEffect} from 'react'
 import AddUser from './User.js';
+import Home from './Home.js';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Pagination from './Pagination.js';
 
@@ -15,159 +16,164 @@ var request_obj=[];
 
 function App() {
 
+  return(
+      <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/addItem" element={<AddUser/>}/>
+      </Routes>
+      </BrowserRouter>
 
-  const [view, setView]=useState("Resource")
-  const jsonData = useRef(null);
-  const [search, setSearch]  = useState(false);
+);
 
-  const [posts, setPosts] = useState([]);
-  const [postsPerPage] = useState(6);
-  const [currentPage, setCurrentPage] = useState(1);
+//   const [view, setView]=useState("Resource")
+//   const jsonData = useRef(null);
+//   const [search, setSearch]  = useState(false);
+//   const [addItem, setAddItem] =useState(false);
 
-  let filterdCards;
-  console.log("rendering")
+//   const [posts, setPosts] = useState([]);
+//   const [postsPerPage] = useState(6);
+//   const [currentPage, setCurrentPage] = useState(1);
 
-  let allSessionsCount = user_obj.length+request_obj.length;
-  // const [sessionsPerPage, setSessionsPerPage] = useState(6);
-  // const [currentPage, setCurrentPage] = useState(1);
+//   let filterdCards;
+//   console.log("rendering")
+
+//   let allSessionsCount = user_obj.length+request_obj.length;
+//   // const [sessionsPerPage, setSessionsPerPage] = useState(6);
+//   // const [currentPage, setCurrentPage] = useState(1);
   
-  function setUser(){
-    setView("User");
+//   function setUser(){
+//     setView("User");
 
-  }
+//   }
 
-  function setResource(){
-    setView("Resource");
-  }
+//   function setResource(){
+//     setView("Resource");
+//   }
 
-  function setRequest(){
-    setView("Request");
-  }
+//   function setRequest(){
+//     setView("Request");
+//   }
 
-  function getFilteredData(searchText){
-    console.log("search key is ", searchText, jsonData.current);
-      var temp = [];
-      let details = jsonData.current;
-    if(details!=null){
-      console.log("details length ", details.length);
-    for(let i = 0;i<details.length;i++){
-      temp.push(details[i]);
-      // if(details[i]['tag'] == )
-    }
+//   function setAddItemButton(){
+//     setAddItem(true);
+//   }
+
+//   function getFilteredData(searchText){
+//     console.log("search key is ", searchText, jsonData.current);
+//       var temp = [];
+//       let details = jsonData.current;
+//     if(details!=null){
+//       console.log("details length ", details.length);
+//     for(let i = 0;i<details.length;i++){
+//       temp.push(details[i]);
+//       // if(details[i]['tag'] == )
+//     }
     
-  }
-    console.log("temp is", temp);
+//   }
+//     console.log("temp is", temp);
     
 
-     filterdCards=temp.filter(
-      resource=>{
-        // console.log("###### ", resource['title'])
-        return(resource['title'].toLowerCase().includes(searchText.toLowerCase()));
-      }
-    );
-     let resouceList = filterdCards;
-     user_obj=[];
-     request_obj=[];
-     for(let i  = 0;i<resouceList.length;i++){
-    if(resouceList[i]['tag']=="user"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      user_obj.push(obj);
-    }
-    else if(resouceList[i]['tag']=="request"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      request_obj.push(obj);
-    }
+//      filterdCards=temp.filter(
+//       resource=>{
+//         // console.log("###### ", resource['title'])
+//         return(resource['title'].toLowerCase().includes(searchText.toLowerCase()));
+//       }
+//     );
+//      let resouceList = filterdCards;
+//      user_obj=[];
+//      request_obj=[];
+//      for(let i  = 0;i<resouceList.length;i++){
+//     if(resouceList[i]['tag']=="user"){
+//       let obj = {title:resouceList[i]['title'], 
+//                  subtitle:resouceList[i]['link'], 
+//                  text:resouceList[i]['description'],
+//                  image:resouceList[i]['icon_url']};
+//       user_obj.push(obj);
+//     }
+//     else if(resouceList[i]['tag']=="request"){
+//       let obj = {title:resouceList[i]['title'], 
+//                  subtitle:resouceList[i]['link'], 
+//                  text:resouceList[i]['description'],
+//                  image:resouceList[i]['icon_url']};
+//       request_obj.push(obj);
+//     }
     
-  }
+//   }
      
 
-  }
+//   }
 
-  useEffect(()=>{
-    console.log("inside use effect");
-    return ()=>{
+//   useEffect(()=>{
+//     console.log("inside use effect");
+//     return ()=>{
       
       
-      // console.log("json current is ", jsonData.current, " ", search);
-      const fetchJsonData = fetch('https://media-content.ccbp.in/website/react-assignment/resources.json');
-      fetchJsonData.then(response=>{
-        return response.json();
-      }).then(resouceList => {
-    jsonData.current = resouceList;
-    console.log("json data is ", jsonData);
-    user_obj = [];
-    request_obj = [];
-  for(let i  = 0;i<resouceList.length;i++){
-    if(resouceList[i]['tag']=="user"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      user_obj.push(obj);
-    }
-    else if(resouceList[i]['tag']=="request"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      request_obj.push(obj);
-    }
+//       // console.log("json current is ", jsonData.current, " ", search);
+//       const fetchJsonData = fetch('https://media-content.ccbp.in/website/react-assignment/resources.json');
+//       fetchJsonData.then(response=>{
+//         return response.json();
+//       }).then(resouceList => {
+//     jsonData.current = resouceList;
+//     console.log("json data is ", jsonData);
+//     user_obj = [];
+//     request_obj = [];
+//   for(let i  = 0;i<resouceList.length;i++){
+//     if(resouceList[i]['tag']=="user"){
+//       let obj = {title:resouceList[i]['title'], 
+//                  subtitle:resouceList[i]['link'], 
+//                  text:resouceList[i]['description'],
+//                  image:resouceList[i]['icon_url']};
+//       user_obj.push(obj);
+//     }
+//     else if(resouceList[i]['tag']=="request"){
+//       let obj = {title:resouceList[i]['title'], 
+//                  subtitle:resouceList[i]['link'], 
+//                  text:resouceList[i]['description'],
+//                  image:resouceList[i]['icon_url']};
+//       request_obj.push(obj);
+//     }
     
-  }
-  if(view == "User")setPosts(user_obj);
-  else if(view=="Request")setPosts(request_obj);
-  else {
-    setPosts(user_obj+request_obj);
-  }
+//   }
+//   if(view == "User")setPosts(user_obj);
+//   else if(view=="Request")setPosts(request_obj);
+//   else {
+//     setPosts(user_obj+request_obj);
+//   }
   
-});
-      console.log("user obj is ", user_obj, "request obj is ", request_obj);
-      // setView("Resource");
-      setSearch(true);
-    }
+// });
+//       console.log("user obj is ", user_obj, "request obj is ", request_obj);
+//       // setView("Resource");
+//       setSearch(true);
+//     }
 
 
-  })
+//   })
 
-   const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-  const paginate = pageNumber => setCurrentPage(pageNumber);
+//    const indexOfLastPost = currentPage * postsPerPage;
+//   const indexOfFirstPost = indexOfLastPost - postsPerPage;
+//   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+//   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-  return (
+//   return (
 
-    <div className="App">
-        <div>
-            
-           {search && <Search getFilteredData={getFilteredData}/>}
-          <Button variant="primary" className="request_button" onClick={setRequest}>Request</Button>
-          <Button variant="primary" className="resource_button" onClick={setResource}>Resource</Button>
-          <Button variant="primary" onClick={setUser}>User</Button>
-        </div>
-        {view=="User" && <User userList={user_obj}/>}
-        {view==="Resource" &&  user_obj.length>0 && request_obj.length>0 && <Resource userList={user_obj} requestList={request_obj}/>}
-        {view=="Request" && <Request requestList={request_obj}/>}
+//     <div className="App">
+//         <div>
+//           <Button variant="primary" className="addItemButton" onClick={setAddItemButton}>Add Item</Button>
+//            {search && <Search getFilteredData={getFilteredData}/>}
+//            {addItem && <AddUser/>}
+//           <Button variant="primary" className="request_button" onClick={setRequest}>Request</Button>
+//           <Button variant="primary" className="resource_button" onClick={setResource}>Resource</Button>
+//           <Button variant="primary" onClick={setUser}>User</Button>
+//         </div>
+//         {view=="User" && <User userList={user_obj}/>}
+//         {view==="Resource" &&  user_obj.length>0 && request_obj.length>0 && <Resource userList={user_obj} requestList={request_obj}/>}
+//         {view=="Request" && <Request requestList={request_obj}/>}
           
-        <Pagination
-        postsPerPage={postsPerPage}
-        totalPosts={posts.length}
-        paginate={paginate}
-      />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Resource/>}/>
-            <Route path="addItem" element={<AddUser/>}/>
-          </Routes>
-      </BrowserRouter>
-    </div>
+      
+//     </div>
 
-  );
+//   );
 }
 
 const renderCard = (card)=>{
