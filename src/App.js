@@ -8,7 +8,7 @@ import Login from './Login.js'
 function App() {
 
   return(
-      <BrowserRouter>
+      <BrowserRouter basename={window.location.pathname || ''}>
       <Routes>
         <Route path="/nxtWave" element={<Login/>}/>
         <Route path="/nxtWave/home" element={<Home/>}/>
