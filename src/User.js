@@ -1,12 +1,11 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useRef, useState } from "react";
-import AddNewData from "./UseForm";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css'
 import { useNavigate} from "react-router-dom";
-import App from "./App.js"
+import TopBar from './Components/TopBar.js'
 
 const FORM_ENDPOINT = "https://media-content.ccbp.in/website/react-assignment/add_resource.json"
 
@@ -31,6 +30,7 @@ function AddUser() {
 	const [link, setLink]=useState("");
 	const [iconUrl, setIconUrl] = useState("");
 	const [description, setDescription] = useState("");
+	const [category, setCategory] = useState("");
 
 	const [cnt, setCnt]=useState(0);
 
@@ -39,164 +39,165 @@ function AddUser() {
 	const [isValidLink, setIsValidLink] = useState(false);
 	const [isValidIconUrl, setIsValidIconUrl] = useState(false);
 	const [isValidDescription, setIsValidDescription] = useState(false);
+	const [isValidCategory, setIsValidCategory] = useState(false);
 
-	const [back, setBack] = useState(false);
-
-	function gotoMain(){
-		setBack(true);
-	}
+	const [isItemPage, setIsItemPage] = useState(false);
 
 	
-
 	const handleSubmit= ()=>{
 		fetch(FORM_ENDPOINT).then(
 				function(res){
 					if(res.status == "200"){
-						console.log("suceess")
-						toast.success('Success Notification !', {
+						toast.success('Server hit Correctly', {
             				position: toast.POSITION.BOTTOM_CENTER,
-            				className:'toast-message'
+            				className:'toast-message-success'
         				});
 					}
 					else {
-						console.log("api call failed");
+						toast.error('Server hit Wrongly',{
+							position: toast.POSITION.BOTTOM_CENTER,
+            				className:'toast-message-error'
+						})
 					}
 				}
 			)
     }
 
-    const enableSubmit=()=>{
-    	console.log(cnt);
-    	if(cnt>=4){
-    		let btn = document.querySelector('button[type="submit"]')
-    		btn.disabled = false;
-    	}
-    }
-	// const {handleSubstatus, message}=AddNewData({form: formElement.current});
-
-  return (
+    
+	return (
   	<div class="addItemPage">
-  	<Button variant="primary" className="gotoMainButton" onClick={()=>navigate(-1)}>Go to Main</Button>
-  	<form className='form-group'>
-            <label className='m-2 form-label'>Title </label>
-            <br/>
-            <input className='m-2 form-control' type="text" name="title" value={title} 
-            onChange={
-            			(e) => {
-							console.log("---------------------")
-							console.log(e.target.value)
-            				if(e.target.value.includes('@')
-            					|| e.target.value.includes('#')
-            					|| e.target.value.includes('&')
-            					|| e.target.value.includes('$')){
-            					// if(cnt>0){
-            					// 	setCnt(cnt-1)
-            		  			// }
-								setIsValidTitle(false);
-            				}else {
-								setIsValidTitle(true);
-							}
-            				// else{
-            				// setCnt(cnt+1)
-            				// setTitle(e.target.value);
-            				// console.log(cnt);
-            			 //   }
-            			//  setCnt(cnt+1);
-            			 setTitle(e.target.value);
-						 //  console.log(cnt);
-            			}
+  		<div className="top">
+  			<TopBar itemPage={isItemPage}/>
+  		</div>
+  		<div className="container">
+	  		<div className="left">
+	  			<div className="back-button">
+	  				<i className="fa fa-angle-left" aria-hidden="true" onClick={()=>navigate(-1)}></i>
+	  				<div className="back-label">Users</div>
+	  			</div>
 
-            		}/>
-            <br/>
-            <label className='m-2 form-label'>Link </label>
-            <br/>
-            <input className='m-2 form-control' type="url" name="link" value={link} 
-            onChange={
-            	(e) => {
-					setLink(e.target.value);
-            		if(isValidHttpUrl(e.target.value)){
-            			setIsValidLink(true);
-            			// setCnt(cnt+1)
-            			// console.log(cnt);
-            		}
-            		else {
-            			// if(cnt>0){
-            			// setCnt(cnt-1)
-            		//   }
-					setIsValidLink(false);
-            		}
-            	}
-            }/>
-            <br/>  
-            <label className='m-2 form-label'>Icon Url </label>
-            <br/>
-            <input className='m-2 form-control' type="url" name="icon_url" value={iconUrl} 
-            onChange={
-            	(e) => {
-					setIconUrl(e.target.value);
-            		if(isValidHttpUrl(e.target.value)){
-						setIsValidIconUrl(true);
-            			// setCnt(cnt+1)
-            			// console.log(cnt);
-            		}
-            		else {
-            			// if(cnt>0){
-            			// 		setCnt(cnt-1)
-            			// }
-						setIsValidIconUrl(false);
-            		}
-            	}
-            }/>
-            <br/> 
-             <label className='m-2 form-label'>Tag </label>
-            <br/>
-            <input className='m-2 form-control' type="text" name="tag" value={tag} 
-            onChange={
-            			(e) => {
-            				if(e.target.value == "user" || e.target.value == "request"){
-            					// setCnt(cnt+1)
-            					// flag=1;
-            					// console.log(cnt);
-								setIsValidTag(true);
-            				}
-            				else {
-            					// if(flag == 1){
-            					// 	if(cnt>0){
-            					// 	flag =0;
-            					// 	setCnt(cnt-1)
-            					//  }
-            					// }
-								setIsValidTag(false);
-            				}
-            				setTag(e.target.value);
-            			}
+	  		
+	  			<div className="title">Item Details</div>
+	  			<form className='form-group'>
+	  				<div className="form-control-group">
+		            	<label className='m-2 form-label'>Title </label>
+		            	<input className='m-2 form-control' type="text" name="title" value={title} 
+		            		onChange={
+		            			(e) => {
+	            				if(e.target.value.includes('@')
+	            					|| e.target.value.includes('#')
+	            					|| e.target.value.includes('&')
+	            					|| e.target.value.includes('$')){
+	            					
+									setIsValidTitle(false);
+	            				}else {
+									setIsValidTitle(true);
+								}
+	            				
+	            			 setTitle(e.target.value);
+	            			}
 
-            		}/>
-            <br/>  
+	            			}/>
+	            	</div>
+	            	<div className="form-control-group">
+			            <label className='m-2 form-label'>Link </label>
+			            <input className='m-2 form-control' type="url" name="link" value={link} 
+			            onChange={
+			            	(e) => {
+								setLink(e.target.value);
+			            		if(isValidHttpUrl(e.target.value)){
+			            			setIsValidLink(true);
+			            			
+			            		}
+			            		else {
+			            			setIsValidLink(false);
+			            		}
+			            	}
+			            }/>
+			        </div>
+			        <div className="form-control-group">
+			            <label className='m-2 form-label'>Icon Url </label>
+			            <input className='m-2 form-control' type="url" name="icon_url" value={iconUrl} 
+			            onChange={
+			            	(e) => {
+								setIconUrl(e.target.value);
+			            		if(isValidHttpUrl(e.target.value)){
+									setIsValidIconUrl(true);
+			            			
+			            		}
+			            		else {
+			            			
+									setIsValidIconUrl(false);
+			            		}
+			            	}
+			            }/>
+		            </div>
+		            <div className="form-control-group">
+		            	<label className='m-2 form-label'>Category </label>
+		            	<input className='m-2 form-control' type="text" name="category" value={category} 
+		            		onChange={
+		            			(e) => {
+									setCategory(e.target.value);
+									setIsValidCategory(true);
+							 
+	            			}
 
-            <label className='m-2 form-label'>Description </label>
-            <br/>
-            <input className='m-2 form-control' type="text" name="description" value={description} 
-            onChange={
-            			(e) => {
-            				setDescription(e.target.value);
-            				// setCnt(cnt+1)
-            				// console.log(cnt);
-							setIsValidDescription(true);
-            			}
-					} />
-            		{/* // } onkeyup={enableSubmit}/> */}
-            <br/>    
-        </form>
-        
-        	<button disabled={
-				!(isValidTitle && isValidLink && isValidIconUrl && isValidTag && isValidDescription)
-			} onClick={handleSubmit}>
-        		Submit
-        	</button>
-			<ToastContainer />
-        	</div>
-       );
+	            			}/>
+	            	</div>
+		            <div className="form-control-group">
+			         	<label className='m-2 form-label'>Tag </label>
+			         	<select className="form-control" onChange={
+	            			(e) => {
+	            				if(e.target.value == "user" || e.target.value == "request"){
+	            					
+									setIsValidTag(true);
+	            				}
+	            				else {
+	            					
+									setIsValidTag(false);
+	            				}
+	            				setTag(e.target.value);
+	            			}
+
+	            		}>
+	            			<option></option>
+			         		<option value="user">User</option>
+			         		<option value="request">Request</option>
+			         		<option value="others">Others</option>
+			         	</select>
+	            	</div>
+	            	<div className="form-control-group">
+			            <label className='m-2 form-label'>Description </label>
+			            <textarea className='m-2 form-control' type="text" name="description" value={description} 
+			            onChange={
+			            			(e) => {
+			            				setDescription(e.target.value);
+			            				// setCnt(cnt+1)
+			            				
+										setIsValidDescription(true);
+			            			}
+								} ></textarea>
+			            		
+		            </div>
+	        	</form>
+	        	<div className="submit-btn">
+		        	<button disabled={
+						!(isValidTitle && isValidLink && isValidIconUrl && isValidCategory && isValidTag && isValidDescription)
+					} onClick={handleSubmit}>
+		        		CREATE
+		        	</button>
+		        	<ToastContainer />
+		        </div>
+				
+			</div>
+			<div className="right">
+				<div className="office-image">
+					<img src="https://i.pinimg.com/originals/e0/e1/f4/e0e1f416e981a5e475024533c5689893.jpg"/>
+				</div>
+			</div>
+    	</div>
+    </div>
+   );
 }
 
 export default AddUser;

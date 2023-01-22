@@ -1,140 +1,94 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-import {Card} from 'react-bootstrap'
+import CardComponent from './Components/Card.js'
 import Button from 'react-bootstrap/Button';
 import {useState, useRef, useEffect} from 'react'
 import AddUser from './User.js';
 import { useNavigate} from "react-router-dom";
-import Pagination from './Pagination.js';
+import Pagination from './Components/Pagination.js';
+import TopBar from './Components/TopBar.js'
+import Search from './Components/Search.js'
 
 var user_obj=[];
 
- var request_obj=[];
+var request_obj=[];
+
+function pushToUserOrRequest(resouceList){
+	user_obj=[];
+     request_obj=[];
+     for(let i  = 0;i<resouceList.length;i++){
+	   		if(resouceList[i]['tag']=="user"){
+		      let obj = {title:resouceList[i]['title'], 
+		                 subtitle:resouceList[i]['category'], 
+		                 text:resouceList[i]['description'],
+		                 link: resouceList[i]['link'],
+		                 image:resouceList[i]['icon_url']};
+		      user_obj.push(obj);
+	    }
+	    else if(resouceList[i]['tag']=="request"){
+	      let obj = {title:resouceList[i]['title'], 
+	                 subtitle:resouceList[i]['category'], 
+	                 text:resouceList[i]['description'],
+	                 link: resouceList[i]['link'],
+	                 image:resouceList[i]['icon_url']};
+	      request_obj.push(obj);
+	    }
+	}
+}
 
 function Home() {
 
-  console.log("Welcome home");
   const navigate = useNavigate();
   const [view, setView]=useState("Resource")
   const jsonData = useRef(null);
   const [search, setSearch]  = useState(false);
-  // const [addItem, setAddItem] =useState(false);
+  const [isItemPage, setIsItemPage] = useState(true);
 
   const [posts, setPosts] = useState([]);
   const [postsPerPage] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
 
   let filterdCards;
-  console.log("rendering")
 
   let allSessionsCount = user_obj.length+request_obj.length;
-  // const [sessionsPerPage, setSessionsPerPage] = useState(6);
-  // const [currentPage, setCurrentPage] = useState(1);
+ 
   
-  function setUser(){
-    setView("User");
-
-  }
-
-  function setResource(){
-    setView("Resource");
-  }
-
-  function setRequest(){
-    setView("Request");
-  }
-
-  // function setAddItemButton(){
-  //   setAddItem(true);
-  // }
-
   function getFilteredData(searchText){
-    console.log("search key is ", searchText, jsonData.current);
       var temp = [];
       let details = jsonData.current;
     if(details!=null){
-      console.log("details length ", details.length);
     for(let i = 0;i<details.length;i++){
       temp.push(details[i]);
-      // if(details[i]['tag'] == )
     }
     
   }
-    console.log("temp is", temp);
-    
-
-     filterdCards=temp.filter(
+    filterdCards=temp.filter(
       resource=>{
-        // console.log("###### ", resource['title'])
         return(resource['title'].toLowerCase().includes(searchText.toLowerCase()));
       }
     );
      let resouceList = filterdCards;
-     user_obj=[];
-     request_obj=[];
-     for(let i  = 0;i<resouceList.length;i++){
-    if(resouceList[i]['tag']=="user"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      user_obj.push(obj);
-    }
-    else if(resouceList[i]['tag']=="request"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      request_obj.push(obj);
-    }
-    
-  }
-     
-
-  }
+     pushToUserOrRequest(resouceList);
+   }
 
   useEffect(()=>{
-    console.log("inside use effect");
     return ()=>{
       
-      
-      // console.log("json current is ", jsonData.current, " ", search);
       const fetchJsonData = fetch('https://media-content.ccbp.in/website/react-assignment/resources.json');
       fetchJsonData.then(response=>{
         return response.json();
       }).then(resouceList => {
     jsonData.current = resouceList;
-    console.log("json data is ", jsonData);
-    user_obj = [];
-    request_obj = [];
-  for(let i  = 0;i<resouceList.length;i++){
-    if(resouceList[i]['tag']=="user"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      user_obj.push(obj);
-    }
-    else if(resouceList[i]['tag']=="request"){
-      let obj = {title:resouceList[i]['title'], 
-                 subtitle:resouceList[i]['link'], 
-                 text:resouceList[i]['description'],
-                 image:resouceList[i]['icon_url']};
-      request_obj.push(obj);
-    }
-    
-  }
-  if(view == "User")setPosts(user_obj);
-  else if(view=="Request")setPosts(request_obj);
-  else {
-    setPosts(user_obj+request_obj);
-  }
+    pushToUserOrRequest(resouceList);
+	  if(view == "User")setPosts(user_obj);
+	  else if(view=="Request")setPosts(request_obj);
+	  else {
+	    setPosts(user_obj+request_obj);
+	  }
   
 });
-      console.log("user obj is ", user_obj, "request obj is ", request_obj);
-      // setView("Resource");
-      setSearch(true);
+     setSearch(true);
     }
 
 
@@ -148,12 +102,16 @@ function Home() {
   return (
 
     <div className="App">
-        <div>
-          <Button variant="primary" className="addItemButton" onClick={()=>navigate("/addItem")}>Add Item</Button>
-           {search && <Search getFilteredData={getFilteredData}/>}
-          <Button variant="primary" className="request_button" onClick={setRequest}>Request</Button>
-          <Button variant="primary" className="resource_button" onClick={setResource}>Resource</Button>
-          <Button variant="primary" onClick={setUser}>User</Button>
+        <div className="top">
+           
+           <TopBar view={view} itemPage={isItemPage}/>
+           
+           	<div className="tabs">
+	           	  <Button variant="primary" className={view==="Resource"?"tab-item active-tab":"tab-item"} onClick={()=>setView("Resource")}>Resource</Button>
+		          <Button variant="primary" className={view==="Request"?"tab-item active-tab":"tab-item"} onClick={()=>setView("Request")}>Request</Button>
+		          <Button variant="primary" className={view==="User"?"tab-item active-tab":"tab-item"} onClick={()=>setView("User")}>User</Button>
+          	</div>
+          	{search && <Search getFilteredData={getFilteredData}/>}
         </div>
         {view=="User" && <User userList={user_obj}/>}
         {view==="Resource" &&  user_obj.length>0 && request_obj.length>0 && <Resource userList={user_obj} requestList={request_obj}/>}
@@ -167,108 +125,35 @@ function Home() {
 
 const renderCard = (card)=>{
     return(
-      <Card className="card">
-      <Card.Body>
-        <Card.Title>{card.title}</Card.Title>
-        <Card.Img variant="top" src={card.image} className="card_image"/>
-        <Card.Subtitle>{card.subtitle}</Card.Subtitle>
-        <Card.Text>
-          {card.text}
-        </Card.Text>
-      </Card.Body>
-    </Card>
+      <CardComponent card={card}/>
     )
   }
 
 function User(props){
-  // console.log(user_obj)
   
   return(
-    <div className="test">
+    <div className="card-list">
       {props.userList.map(renderCard)}
     </div>
   );
 }
 
 function Resource(props){
-  console.log("props is ", props );
   const user_obj1=props.userList;
   const request_obj1= props.requestList;
-  return(
-  <div>
+
+ return(
+  <div className="card-list">
     {user_obj1 && user_obj1.map(renderCard)}
-    {request_obj1 &&request_obj1.map(renderCard)}
+    {request_obj1 && request_obj1.map(renderCard)}
     </div>
   );
 }
 
 function Request(props){
   return(
-  <div>
+  <div className="card-list">
     {props.requestList.map(renderCard)}
-    </div>
-  );
-}
-
-function Search(props){
-  
-  // let details = props.details;
-  // // console.log("deatil ss", details.details);
-  const [searchText, setSearchText]=useState('');
-  //   var temp = [];
-  //   if(details && details.details){
-  //     console.log("details length ", details.details.length);
-  //   for(let i = 0;i<details.details.length;i++){
-  //     temp.push(details.details[i]);
-  //   }
-    
-  // }
-  //   console.log("temp is", temp);
-    
-
-  //   const filterdCards=temp.filter(
-  //     resource=>{
-  //       // console.log("###### ", resource['title'])
-  //       return(resource['title'].toLowerCase().includes(searchText.toLowerCase()));
-  //     }
-  //   );
-  
-  function searchList() {
-    // return (
-    //     <SearchList filterdCards={filterdCards} />
-      
-    // );
-    props.getFilteredData(searchText);
-  }
-
-  const handleClick= e=>{
-    
-    setSearchText(e.target.value);
-    console.log("serac  text is ", searchText);
-  }
-
-  return(
-  <div class="search">
-    <p>This is the search</p>
-    <input type="search" onChange={handleClick}/>
-    {searchList()}
-  </div>
-  )
-}
-
-function SearchList({ filterdCards }) {
-  console.log('filterdCards ', filterdCards)
-  const filtered = filterdCards.map(card =>  {
-    console.log("card titile is ", card.title);
-    <Card style={{ width: '18rem', border: `2px solid black`}}>
-    <Card.Body>
-      <Card.Title>card.title</Card.Title>
-    </Card.Body>
-    </Card>
-  }); 
-  return (
-    <div>
-      {filtered}
     </div>
   );
 }

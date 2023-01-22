@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #F5F5F5;
 }
 
 
@@ -22,17 +23,47 @@
   padding-left: 0px;
 }
 
-.resource_button{
-  margin-left: 50px;
-  margin-right: 50px;
+
+.search {
+    display: flex;
+    margin-left: 10%;
+    padding: 15px;
+    align-items: center;
 }
 
-.toast-message {
-    background: darkblue;
-    color: #fff;
-    font-size: 20px;
-    width: 34vw;
-    padding: 30px 20px;
+.search i.fa.fa-search {
+    margin-right: -25px;
+    z-index: 1;
+    margin-left: 12px;
+    color: #171F46;
+    font-size: 14px;
+}
+
+.search input[type="search"] {
+    width: 600px;
+    height: 40px;
+    font-size: 14px;
+    font-family: HK Grotesk;
+    padding: 15px 35px;
+    border: 1px solid #D7DFE9;
+}
+
+.search input[type="search"]::placeholder {
+  color: #7E858E;
+  opacity: 0.6;
+}
+
+.toast-message-success {
+    background: #00FF00 !important;
+    color: black !important;
+    fontWeight: bold;
+
+}
+
+.toast-message-error {
+    background: red !important;
+    color: black !important;
+    fontWeight: bold;
 }
 
 .App-logo {
@@ -43,6 +74,10 @@
 .addItemPage{
   margin-left: 10px;
 }
+
+
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -72,4 +107,334 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.top {
+    display: flex;
+    flex-direction: column;
+}
+
+.top .navigationButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 15px;
+    background-color: #FFF;
+    border-bottom: 1px solid #D7DFE9;
+}
+
+.top .navigationButtons .addItemButton {
+    padding: 10px 15px;
+    font-size: 12px;
+    border: none;
+    background-color: #2DCA73;
+    color: #fff;
+    margin: 0px 10px;
+    cursor: pointer;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0px 25px;
+}
+
+.tabs .tab-item {
+    border: 1px solid #ccc;
+    background-color: #D7DFE9;
+    color: #171F46;
+    width: 150px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: Hk Grotesk;
+    cursor: pointer;
+}
+
+.tabs .tab-item.active-tab {
+    color: #fff;
+    background-color: #0B69FF;
+}
+
+.card-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0% 10%;
+}
+
+.card-list .card {
+    border: 1px solid #D7DFE9;
+    border-radius: 3px;
+    transition: 0.2s;
+    width: 300px;
+    padding: 10px 20px;
+    margin: 15px;
+    box-shadow: none;
+    background-color: #FFF;
+}
+
+.card-list .card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.card-list .card .card-body .header {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.card-list .card .card-body .header .title {
+    margin: 0px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.card-list .card .card-body .header .title .card-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #171F46;
+    font-family: 'HK Grotesk';
+}
+
+.card-list .card .card-body .header .title .card-subtitle {
+    font-size: 12px;
+    color: #7E858E;
+    font-family: 'HK Grotesk';
+    margin: 10px 0px 0px;
+}
+
+.card-list .card .card-body .card-link {
+    color: #0B69FF;
+    font-family: 'HK Grotesk';
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.card-list .card .card-body .card-text {
+    color: #7E858E;
+    font-size: 14px;
+    font-family: 'HK Grotesk';
+    text-align: left;
+}
+
+
+
+/*User.js*/
+.container {
+    display: flex;
+}
+
+.container .left,
+.container .right {
+    flex: 1;
+}
+
+.container .left .back-button {
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.container .left .back-button i {
+  cursor: pointer;
+  color: #171F46;
+}
+
+.container .left .back-button .back-label {
+    font-size: 12px;
+    margin: 0px 10px;
+    color: #7E858E;
+    cursor: pointer;
+}
+
+.container .left .title {
+    font-size: 32px;
+    color: #171F46;
+    text-align: center;
+}
+
+form.form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-control-group {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 10px 0px;
+}
+
+.form-control-group .form-label {
+    color: #7E858E;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.form-control-group input.form-control,
+.form-control-group select.form-control,
+.form-control-group text-area.form-control {
+    border: 1px solid #D7DFE9;
+    margin: 10px 0px;
+    border-radius: 2px;
+    background-color: #fff;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.form-control-group input[type="url"].form-control {
+  color: #0B69FF;
+}
+
+.submit-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.submit-btn button {
+    background-color: #0B69FF;
+    color: #fff;
+    padding: 5px 15px;
+    font-size: 14px;
+    font-family: HK Grotesk;
+    cursor: pointer;
+}
+
+.container .right .office-image {
+    text-align: right;
+    height: 84vh;
+    overflow: hidden;
+}
+
+.navigationButtons > div {
+  display: flex;
+  align-items: center;
+}
+
+.navigationButtons .profile {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: #ccc;
+}
+
+.navigationButtons .profile img {
+  cursor: pointer;
+}
+
+.profile .options {
+    position: absolute;
+    padding: 5px 0px;
+    right: 10px;
+    margin-top: 50px;
+    background-color: #fff;
+    width: 8%;
+    box-shadow: 2px 2px 8px 0px #ccc;
+}
+
+.profile .options  .list {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0px;
+    width: 100%;
+}
+
+.profile .list .list-item {
+    padding: 5px 10px;
+    color: #171F46;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: Rubik;
+    flex: 1;
+}
+
+.profile .list .list-item:hover {
+  color: #fff;
+  background-color: #0B69FF;
+}
+
+
+/*Login.js*/
+.login {
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+}
+
+.login .title {
+    font-size: 30px;
+    font-weight: 700;
+    font-family: Rubik;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin: 20px;
+}
+
+.login form.login-form {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 7px 0px #ccc;
+    width: 40%;
+    padding: 15px;
+    border-radius: 3px;
+    background-color: #fff;
+}
+
+.login form.login-form label {
+    font-size: 14px;
+    font-family: Rubik;
+    font-weight: bold;
+    margin: 5px 0px;
+    color: #171F46;
+}
+
+.login form.login-form input {
+    border: 1px solid #D7DFE9;
+    padding: 10px;
+    color: #171F46;
+    font-size: 14px;
+    font-family: rubik;
+    margin-bottom: 15px;
+}
+
+.login form.login-form button {
+    margin: 0% 35%;
+    text-transform: uppercase;
+    border: none;
+    padding: 5px;
+    color: #fff;
+    position: relative;
+    background-color: #0B69FF;
+}
+
+.app-title{
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: apptitle 5s infinite;
+    
+}
+
+@keyframes apptitle {
+  from {background-color: #D7DBDD;}
+  to {background-color: #C9C742;}
 }
