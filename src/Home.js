@@ -1,12 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import CardComponent from './Components/Card.js'
 import Button from 'react-bootstrap/Button';
 import {useState, useRef, useEffect} from 'react'
-import AddUser from './User.js';
 import { useNavigate} from "react-router-dom";
-import Pagination from './Components/Pagination.js';
 import TopBar from './Components/TopBar.js'
 import Search from './Components/Search.js'
 
@@ -18,7 +15,7 @@ function pushToUserOrRequest(resouceList){
 	user_obj=[];
      request_obj=[];
      for(let i  = 0;i<resouceList.length;i++){
-	   		if(resouceList[i]['tag']=="user"){
+	   		if(resouceList[i]['tag']==="user"){
 		      let obj = {title:resouceList[i]['title'], 
 		                 subtitle:resouceList[i]['category'], 
 		                 text:resouceList[i]['description'],
@@ -26,7 +23,7 @@ function pushToUserOrRequest(resouceList){
 		                 image:resouceList[i]['icon_url']};
 		      user_obj.push(obj);
 	    }
-	    else if(resouceList[i]['tag']=="request"){
+	    else if(resouceList[i]['tag']==="request"){
 	      let obj = {title:resouceList[i]['title'], 
 	                 subtitle:resouceList[i]['category'], 
 	                 text:resouceList[i]['description'],
@@ -39,11 +36,11 @@ function pushToUserOrRequest(resouceList){
 
 function Home() {
 
-  const navigate = useNavigate();
+  
   const [view, setView]=useState("Resource")
   const jsonData = useRef(null);
   const [search, setSearch]  = useState(false);
-  const [isItemPage, setIsItemPage] = useState(true);
+  const isItemPage = false;
 
   const [posts, setPosts] = useState([]);
   const [postsPerPage] = useState(6);
@@ -51,10 +48,8 @@ function Home() {
 
   let filterdCards;
 
-  let allSessionsCount = user_obj.length+request_obj.length;
- 
   
-  function getFilteredData(searchText){
+ function getFilteredData(searchText){
       var temp = [];
       let details = jsonData.current;
     if(details!=null){
@@ -81,8 +76,8 @@ function Home() {
       }).then(resouceList => {
     jsonData.current = resouceList;
     pushToUserOrRequest(resouceList);
-	  if(view == "User")setPosts(user_obj);
-	  else if(view=="Request")setPosts(request_obj);
+	  if(view === "User")setPosts(user_obj);
+	  else if(view==="Request")setPosts(request_obj);
 	  else {
 	    setPosts(user_obj+request_obj);
 	  }
