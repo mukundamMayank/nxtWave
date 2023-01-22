@@ -45,7 +45,7 @@ function AddUser() {
 	const handleSubmit= ()=>{
 		fetch(FORM_ENDPOINT).then(
 				function(res){
-					if(res.status === "200" || res.status === "304"){
+					if(res.statusCode === 200 || res.statusCode === 304){
 						toast.success('Server hit Correctly', {
             				position: toast.POSITION.BOTTOM_CENTER,
             				className:'toast-message-success'
