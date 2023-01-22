@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import { useNavigate} from "react-router-dom";
 
+
 function TopBar(props){
 	const navigate = useNavigate();
 	const [ optn, setOptn ] = useState(false);
@@ -8,7 +9,7 @@ function TopBar(props){
 		<div>
 		<div className="navigationButtons">
 			<div className="nxtWavelogo">
-		  		<img src = "assets/nxtWave.png"  alt="alternate image" style={{width:"80px" ,height:"80px"}} onClick={()=>navigate("/home")}/>
+		  		<img src = "./assets/nxtWave.png" style={{width:"80px" ,height:"80px"}} onClick={()=>navigate("/home")}/>
 		  	</div>
 		  	<div>
 	      		{props.itemPage && <button disabled={!(props.view==="User")} className="addItemButton" onClick={()=>navigate("/addItem")}>Add Item</button>}

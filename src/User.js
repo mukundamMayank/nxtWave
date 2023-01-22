@@ -1,5 +1,3 @@
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import { useRef, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,19 +18,19 @@ function isValidHttpUrl(string) {
 }
 
 function AddUser() {
-    let flag = 0;
+    
     const navigate = useNavigate();
 
-	const formElement = useRef(null);
+	
 
 	const [title, setTitle] = useState("");
-	const [tag, setTag] = useState("");
 	const [link, setLink]=useState("");
 	const [iconUrl, setIconUrl] = useState("");
 	const [description, setDescription] = useState("");
 	const [category, setCategory] = useState("");
+	const [tag, setTag] = useState("");
 
-	const [cnt, setCnt]=useState(0);
+	
 
 	const [isValidTitle, setIsValidTitle] = useState(false);
 	const [isValidTag, setIsValidTag] = useState(false);
@@ -41,13 +39,13 @@ function AddUser() {
 	const [isValidDescription, setIsValidDescription] = useState(false);
 	const [isValidCategory, setIsValidCategory] = useState(false);
 
-	const [isItemPage, setIsItemPage] = useState(false);
+	const isItemPage = false;
 
 	
 	const handleSubmit= ()=>{
 		fetch(FORM_ENDPOINT).then(
 				function(res){
-					if(res.status == "200"){
+					if(res.status === "200"){
 						toast.success('Server hit Correctly', {
             				position: toast.POSITION.BOTTOM_CENTER,
             				className:'toast-message-success'
@@ -146,9 +144,9 @@ function AddUser() {
 	            	</div>
 		            <div className="form-control-group">
 			         	<label className='m-2 form-label'>Tag </label>
-			         	<select className="form-control" onChange={
+			         	<select className="form-control" value={tag} onChange={
 	            			(e) => {
-	            				if(e.target.value == "user" || e.target.value == "request"){
+	            				if(e.target.value === "user" || e.target.value === "request"){
 	            					
 									setIsValidTag(true);
 	            				}

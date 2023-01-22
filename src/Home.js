@@ -3,7 +3,6 @@ import React from 'react';
 import CardComponent from './Components/Card.js'
 import Button from 'react-bootstrap/Button';
 import {useState, useRef, useEffect} from 'react'
-import { useNavigate} from "react-router-dom";
 import TopBar from './Components/TopBar.js'
 import Search from './Components/Search.js'
 
@@ -40,12 +39,8 @@ function Home() {
   const [view, setView]=useState("Resource")
   const jsonData = useRef(null);
   const [search, setSearch]  = useState(false);
-  const isItemPage = false;
-
-  const [posts, setPosts] = useState([]);
-  const [postsPerPage] = useState(6);
-  const [currentPage, setCurrentPage] = useState(1);
-
+  const isItemPage = true;
+  
   let filterdCards;
 
   
@@ -76,11 +71,7 @@ function Home() {
       }).then(resouceList => {
     jsonData.current = resouceList;
     pushToUserOrRequest(resouceList);
-	  if(view === "User")setPosts(user_obj);
-	  else if(view==="Request")setPosts(request_obj);
-	  else {
-	    setPosts(user_obj+request_obj);
-	  }
+	  
   
 });
      setSearch(true);
@@ -89,12 +80,7 @@ function Home() {
 
   })
 
-   const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-  const paginate = pageNumber => setCurrentPage(pageNumber);
-
-  return (
+   return (
 
     <div className="App">
         <div className="top">
@@ -108,9 +94,9 @@ function Home() {
           	</div>
           	{search && <Search getFilteredData={getFilteredData}/>}
         </div>
-        {view=="User" && <User userList={user_obj}/>}
+        {view==="User" && <User userList={user_obj}/>}
         {view==="Resource" &&  user_obj.length>0 && request_obj.length>0 && <Resource userList={user_obj} requestList={request_obj}/>}
-        {view=="Request" && <Request requestList={request_obj}/>}
+        {view==="Request" && <Request requestList={request_obj}/>}
           
       
     </div>
