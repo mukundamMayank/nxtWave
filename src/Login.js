@@ -26,7 +26,7 @@ function Login(){
 				}/>
 
 				
-				<button disabled={!(login && pwd)} onClick={()=>navigate("/home")}>Submit</button>
+				<button disabled={!(login && pwd)} onClick={()=>navigate("/nxtWave/home")}>Submit</button>
 			</form>
 			
 		</div>
