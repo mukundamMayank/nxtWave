@@ -11,8 +11,8 @@ function App() {
       <BrowserRouter>
       <Routes>
         <Route path="/nxtWave" element={<Login/>}/>
-        <Route path="/home" element={<Home/>}/>
-        <Route path="/addItem" element={<AddUser/>}/>
+        <Route path="/nxtWave/home" element={<Home/>}/>
+        <Route path="/nxtWave/addItem" element={<AddUser/>}/>
       </Routes>
       </BrowserRouter>
 
