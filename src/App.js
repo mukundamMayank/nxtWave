@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter basename={window.location.pathname || ''}>
       <Routes>
         <Route path="/nxtWave" element={<Login/>}/>
-        <Route path="/nxtWave/home" element={<Home/>}/>
+        <Route path="/home" element={<Home/>}/>
         <Route path="/nxtWave/addItem" element={<AddUser/>}/>
       </Routes>
       </BrowserRouter>
