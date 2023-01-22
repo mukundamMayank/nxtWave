@@ -71,10 +71,10 @@ function Home() {
       }).then(resouceList => {
     jsonData.current = resouceList;
     pushToUserOrRequest(resouceList);
-	  
+	  setSearch(true);
   
 });
-     setSearch(true);
+     
     }
 
 
